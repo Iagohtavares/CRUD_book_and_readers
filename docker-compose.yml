@@ -30,7 +30,12 @@ services:
 
   api-books:
     image: flask_apirestful:v1
-    env_file: ./app/api-books/.env
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER_API_BOOKS}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD_API_BOOKS}
+      POSTGRES_HOST: ${POSTGRES_HOST_API_BOOKS}
+      POSTGRES_PORT: ${POSTGRES_PORT_API_BOOKS}
+      POSTGRES_DB: ${POSTGRES_DB_API_BOOKS}
     ports:
       - 5000:5000
     volumes:
@@ -41,7 +46,12 @@ services:
 
   api-readers:
     image: flask_apirestful:v1
-    env_file: ./app/api-readers/.env
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER_API_READERS}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD_API_READERS}
+      POSTGRES_HOST: ${POSTGRES_HOST_API_READERS}
+      POSTGRES_PORT: ${POSTGRES_PORT_API_READERS}
+      POSTGRES_DB: ${POSTGRES_DB_API_READERS}
     ports:
       - 5001:5000
     volumes:
