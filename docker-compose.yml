@@ -1,0 +1,55 @@
+version: '3.5'
+services:
+  api:
+    image: flask_apirestful:v1
+    build: ./app/flask_apirestful
+    entrypoint: "/bin/sh -c"
+    command: "exit 0"
+
+  database-books:
+    image: postgres:13-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER_BOOKS}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD_BOOKS}
+      POSTGRES_HOST: ${POSTGRES_HOST_BOOKS}
+      POSTGRES_PORT: ${POSTGRES_PORT_BOOKS}
+      POSTGRES_DB: ${POSTGRES_DB_BOOKS}
+    volumes:
+      - db_volume-books:/var/lib/postgresql/data
+
+  database-readers:
+    image: postgres:13-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER_READERS}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD_READERS}
+      POSTGRES_HOST: ${POSTGRES_HOST_READERS}
+      POSTGRES_PORT: ${POSTGRES_PORT_READERS}
+      POSTGRES_DB: ${POSTGRES_DB_READERS}
+    volumes:
+      - db_volume-readers:/var/lib/postgresql/data
+
+  api-books:
+    image: flask_apirestful:v1
+    env_file: ./app/api-books/.env
+    ports:
+      - 5000:5000
+    volumes:
+      - ./app/api-books:/usr/src/app/
+    depends_on:
+      - api
+      - database-books
+
+  api-readers:
+    image: flask_apirestful:v1
+    env_file: ./app/api-readers/.env
+    ports:
+      - 5001:5000
+    volumes:
+      - ./app/api-readers:/usr/src/app/
+    depends_on:
+      - api
+      - database-readers
+
+volumes:
+  db_volume-books:
+  db_volume-readers:
